@@ -38,9 +38,9 @@ public:
 
 	int getSize() const;
 	
-	void del();
+	
 	void helpfonk(const char*);
-
+	~String();
 
 private:
 	char* str;

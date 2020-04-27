@@ -1,4 +1,4 @@
-#include "String.h"
+ï»¿#include "String.h"
 
 String::String()//default constructor
 {
@@ -11,12 +11,12 @@ String::String(const String& gelen)
 	if (gelen.size != size)
 	{
 		delete str;
-		str = new char[size+1];
+		str = new char[size + 1];
 	}
 	size = gelen.size;
 	for (size_t i = 0; i < size; ++i) {
 		str[i] = gelen.str[i];
-		//gelen dizinin tüm elemanlarýný yeni oluþan diziye atadýk
+		//gelen dizinin tÃ¼m elemanlarÃ½nÃ½ yeni oluÃ¾an diziye atadÃ½k
 	}
 	str[size] = '\0';
 }
@@ -41,20 +41,20 @@ String::String(const char gelen)
 {
 	size = 1;
 	str = new char[size + 1];
-	str[size-1] = gelen;
+	str[size - 1] = gelen;
 	str[size] = '\0';
 }
 
 const String& String::operator=(const char* gelen)
 {
-	del();
+	delete[] str;
 	helpfonk(gelen);
 	return *this;
 }
 
 const String& String::operator=(const char gelen)
 {
-	del();
+	delete[] str;
 	size = 1;
 	str = new char[size + 1];
 	str[size] = gelen;
@@ -65,44 +65,44 @@ const String& String::operator=(const char gelen)
 const String& String::operator=(const String& gelen)
 {
 	if (&gelen != this) {
-		//eðer gelenin adresi nesnemizle ayný deðilse yani kendini kendine atamýyorsak
-		if (size != gelen.size) { //gelenin boyutu þuanki diziden farklýysa
-			del();
+		//eÃ°er gelenin adresi nesnemizle aynÃ½ deÃ°ilse yani kendini kendine atamÃ½yorsak
+		if (size != gelen.size) { //gelenin boyutu Ã¾uanki diziden farklÃ½ysa
+			delete[] str;
 			size = gelen.size; //yeni boyutu belirledik
-			str = new char[size]; // yeni boyut kadar yer aldýk
+			str = new char[size]; // yeni boyut kadar yer aldÃ½k
 		}
-		//bu kontrolün amacý, eðer boyutlar ayný ise silip yeni yer almakla uðraþmamaktýr
+		//bu kontrolÃ¼n amacÃ½, eÃ°er boyutlar aynÃ½ ise silip yeni yer almakla uÃ°raÃ¾mamaktÃ½r
 		else if (size == 0)
 		{
 			str = new char{ '\0' };
 			return *this;
 		}
-		for (size_t i = 0; i <= size; ++i) { //kopyalanacak dizinin tüm elemanlarýný yeni diziye atadýk
+		for (size_t i = 0; i <= size; ++i) { //kopyalanacak dizinin tÃ¼m elemanlarÃ½nÃ½ yeni diziye atadÃ½k
 			str[i] = gelen.str[i];
 		}
-		
+
 	}
-	return *this; // a=b=c tarzý bir eþitlik yapmak için kendini döndürdük
+	return *this; // a=b=c tarzÃ½ bir eÃ¾itlik yapmak iÃ§in kendini dÃ¶ndÃ¼rdÃ¼k
 }
 
 const String& String::operator+=(const String& gelen)
 {
 	size_t newsize = size + gelen.size;
-	char* temp = new char[size+1];
+	char* temp = new char[size + 1];
 	for (size_t i = 0; i < size; i++)
 		temp[i] = str[i];
-	del();
-	str = new char[newsize+1];
+	delete[] str;
+	str = new char[newsize + 1];
 	size_t i;
 	for (i = 0; i < size; i++)
 		str[i] = temp[i];
 	if (gelen.size == 0)
 		str[size] = '\0';
 	else
-		for (size_t a=0;a<=gelen.size; ++a) {
-			
-			str[a+size] = gelen.str[a];
-		
+		for (size_t a = 0; a <= gelen.size; ++a) {
+
+			str[a + size] = gelen.str[a];
+
 		}
 	size = newsize;
 	return *this;
@@ -122,23 +122,11 @@ const String& String::operator+=(const char a)
 	return *this;
 }
 
-const String String::operator+(const String& gelen)
+const String String::operator+(const String& otherString)
 {
-	String temp = *this;
-	temp+= gelen;
-	return temp;
-}
+	String temp(*this);
 
-const String String::operator+(const char* a)
-{
-	String temp = *this;
-	return temp + a;
-}
-
-const String String::operator+(const char a)
-{
-	String temp = *this;
-	temp += a;
+	temp += otherString;
 
 	return temp;
 }
@@ -181,21 +169,6 @@ int String::getSize() const
 	return size;
 }
 
-void String::del()
-{
-	if (str) 
-	{
-		if (size == 0)
-		{
-			delete str;
-		}
-
-		else if (size > 0)
-		{
-			delete[] str;
-		}
-	}
-}
 
 ostream& operator<<(std::ostream& yaz, const String& nesne)
 {
@@ -204,3 +177,10 @@ ostream& operator<<(std::ostream& yaz, const String& nesne)
 	return yaz;
 }
 
+String::~String()
+{
+	if (str != nullptr)
+		delete[] str;
+
+	str = nullptr;
+}

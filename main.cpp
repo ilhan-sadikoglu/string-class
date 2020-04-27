@@ -5,8 +5,7 @@ using namespace std;
 int main() {
 	String a = "ilhan";
 	String b = "Furkan";
-	
-	String c;
-	c= a + b;
-	cout<<c;
+	cout <<a+b;
+
+
 }
